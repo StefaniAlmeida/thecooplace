@@ -229,6 +229,30 @@ select * from [TB_visibilidade]
 delet from [TB_visibilidade] where id = ?
 update [TB_visibilidade] set (id_visibilidade) values(?) where id = ?
 
+'''
+CRIANDO O MENU
+'''
+        print("Menu:\n "
+              "1- Criar rede social\n"
+              "2- Inserir usuário\n"
+              "3- Adicionar amigo\n"
+              "4- Enviar mensagem\n")
+        try:
+            op = input("Digite a opção desejada: ")
 
-    def menu(self):
-        pass
+            if op == 1:
+               criarRedeSocial()
+            elif op == 2:
+                inserirUsuario()
+            elif op == 3:
+                adicionarAmigo()
+            elif op == 4:
+                enviarMensagem()
+                break
+
+        except ValueError:
+            print("Só números são válidos... Tente novamente!")
+
+
+if __name__ == '__main__':
+    main()
