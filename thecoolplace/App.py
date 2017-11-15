@@ -251,7 +251,7 @@ CRIANDO O MENU
                 break
 
         except ValueError:
-            print("Só números são válidos... Tente novamente!")
+            print("Apenas números são válidos... Tente novamente!")
 
 
 if __name__ == '__main__':
