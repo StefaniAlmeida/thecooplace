@@ -3,6 +3,18 @@ import sqlite3
 conn = sqlite3.connect ( ' usuário.db ' )
 cursor = conn.cursor ()
 
+ def criarRedeSocial(self):
+        pass
+ 
+ def inserirUsuario(self):
+        pass
+ 
+ def adicionarAmigo(self):
+        pass
+ 
+ def enviarMensagem(self):
+        pass
+    
 # Criando tabela Usuario
 cursor.execute ( """
 CREATE TABLE usuario ()
