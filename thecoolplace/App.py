@@ -238,15 +238,15 @@ CRIANDO O MENU
               "3- Adicionar amigo\n"
               "4- Enviar mensagem\n")
         try:
-            op = input("Digite a opção desejada: ")
+            opecoes = input("Digite a opção desejada: ")
 
-            if op == 1:
+            if opecoes == 1:
                criarRedeSocial()
-            elif op == 2:
+            elif opecoes == 2:
                 inserirUsuario()
-            elif op == 3:
+            elif opecoes == 3:
                 adicionarAmigo()
-            elif op == 4:
+            elif opecoes == 4:
                 enviarMensagem()
                 break
 
