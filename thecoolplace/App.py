@@ -244,13 +244,12 @@ update [TB_visibilidade] set (id_visibilidade) values(?) where id = ?
 '''
 CRIANDO O MENU
 '''
-        print("Menu:\n "
+opecoes = int(input("Menu:\n "
               "1- Criar rede social\n"
               "2- Inserir usuário\n"
               "3- Adicionar amigo\n"
               "4- Enviar mensagem\n")
         try:
-            opecoes = input("Digite a opção desejada: ")
 
             if opecoes == 1:
                criarRedeSocial()
