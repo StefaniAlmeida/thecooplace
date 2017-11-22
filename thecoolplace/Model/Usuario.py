@@ -1,5 +1,7 @@
+import sqlite3
+
 Classe  Usuario ():
-    def  __init__ ( self , id , nome , email , senha , sexo , cidade , data_nascimento ):
+    def  __init__ ( self, id, nome, email, senha, sexo, cidade, data_nascimento):
         self .id =  id
         self .nome = nome
         self .email = email
