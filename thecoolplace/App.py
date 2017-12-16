@@ -1,269 +1,88 @@
+from database.Config import config
+import mysql.connector
 from Model.Usuario import Usuario
-import sqlite3
-conn = sqlite3.connect ( ' usuário.db ' )
-cursor = conn.cursor ()
+from Model.Postagem import Postagem
 
- def criarRedeSocial(self):
-        pass
- 
- def inserirUsuario(self):
-        pass
- 
- def adicionarAmigo(self):
-        pass
- 
- def enviarMensagem(self):
-        pass
-    
-# Criando tabela Usuario
-cursor.execute ( """
-CREATE TABLE usuario ()
-    id int NOT NULL,
-    nome varchar (100) NOT NULL,
-    email varchar (100) NOT NULL,
-    senha varchar (50) NOT NULL,
-    sexo VARCHAR (10) NÃO Nulo,
-    cidade VARCHAR (150) NÃO NULL,
-    data_nascimento DATA NÃO NULL,
-    );
-""" )
-print ( ' tabela criada ' )
-# Finalizando criacao da tabela usuário
+def criarBanco():
+    conn = mysql.connector.connect(**config)
+    cursor = conn.cursor()
 
-# inserir usuário
-cursor.execute ( """
-Insira no usuário (id, nome, email, senha, sexo, cidade, data_nascimento)
-valores (2, 'nicolas', nicolas @ gmail ',' 12345 ',' masculino ',' soledade ', 2001/08/30)
-""" )
+    try:
+        cursor.execute("""
+            CREATE TABLE tb_usuario(
+                id int primary key auto_increment,
+                nome varchar(100) not null,
+                email varchar(30) not null,
+                senha varchar(20) not null,
+                sexo varchar(20),
+                cidade varchar(30),
+                data_nascimento varchar(10)
+            );
+        """)
 
-# selecionar usuário
-cursor.execute ( """
-selecione * do usuário
-""" )
+        cursor.execute("""
+            CREATE TABLE tb_mensagem(
+                id int primary key auto_increment,
+                remetente_id int not null,
+                destinatario_id int not null,
+                texto text,
+                data_envio varchar(10),
+                foreign key(remetente_id) references tb_usuario(id),
+                foreign key(destinatario_id) references tb_usuario(id)
+            );
+        """)
 
-para linha em cursor.fetchall ():
-    imprimir (linha)
+        cursor.execute("""
+            CREATE TABLE tb_postagem(
+                id int primary key auto_increment,
+                usuario_id int not null,
+                texto text,
+                foreign key(usuario_id) references tb_usuario(id)
+            );
+        """)
+    except mysql.connector.ProgrammingError:
+        return
 
-id_usuario =  1
-
-# update usuário
-cursor.execute ( """
-Atualizar usuário
-onde id =?
-""" , (id_usuario,))
-
-print ( ' dados atualizados ' )
-
-# delete user
-cursor.execute ( """
-eliminar do usuário
-onde id =?
-""" , (id_usuario,))
-
-#tabela usuario
-select * from [TB_usuario]
-delet from [TB_usuario] where id = ?
-update [TB_usuario] set (id_usuario) values(?) where id = ?
-
-# Criando tabela Mensagem
-cursor.execute ( """
-CREATE TABLE mensagem (
-    id int NOT NULL,
-    destinatario varchar (150) NÃO NULL,
-    rementente varchar (150) NOT NULL,
-    data_envio data NÃO NULL
-    );
-""" )
-print ( ' tabela criada ' )
-
-# inserir mensagem
-cursor.execute ( """
-inserir na mensagem (id, destinatario, rementente, data_envio)
-valores (3'nicolas ',' stefani ', 2017/10/25)
-""" )
-
-# selecionar mensagem
-cursor.execute ( """
-selecione * da mensagem
-""" )
-
-para linha em cursor.fetchall ():
-    imprimir (linha)
-
-id_mensagem =  6
-
-# atualização mensagem
-cursor.execute ( """
-mensagem de atualização
-onde id =?
-""" , (id_mensagem,))
-print ( ' Dados atualizados ' )
-
-# delete message
-cursor.execute ( """
-excluir da mensagem
-onde id =?
-""" , (id_mensagem,))
-
-select * from [TB_mensagem]
-delet from [TB_mensagem] where id = ?
-update [TB_mensagem] set (id_mensagem) values(?) where id = ?
-
-
-# criando um conversor de tabela
-cursor.execute ( """
-CREATE TABLE chat (
-    conversa varchar (100) NOT NULL,
-    id int NOT NULL
-    );
-""" )
-print ( ' Tabela criada! ' )
-
-# inserir bate-papo
-cursor.execute ( """
-Insira no chat (conversa, id)
-valores ('oi', 7)
-""" )
-
-# selecione o bate-papo
-cursor.execute ( """
-selecione * a partir do chat
-""" )
-
-para linha em cursor.fetchall ():
-    imprimir (linha)
-
-id_chat =  9
-
-# atualização
-cursor.execute ( """
-atualizar conversa
-onde id =?
-""" , (id_chat,))
-print ( ' dados atualizados ' )
-
-# delete chat
-cursor.execute ( """
-excluir do bate-papo
-onde id =?
-""" , (id_chat,))
-
-select * from [TB_chat]
-delet from [TB_chat] where id = ?
-update [TB_chat] set (id_chat) values(?) where id = ?
-
-# criando uma alimentação de tabela
-cursor.execute ( """
-Criar alimentação de tabela (
-    publicaçao varchar (500) não nulo,
-    id int null
-    );
-""" )
-print ( ' Tabela criada ' )
-
-# inserir feed
-cursor.execute ( """
-inserir no feed (publicacao, id)
-valores ('publicacao', 5)
-""" )
-
-# selecione o feed
-cursor.execute ( """
-selecione * do feed
-""" )
-
-para linha em cursor.fetchall ():
-    imprimir (linha)
-
-
-id_feed =  4
-
-# atualização de feed
-cursor.execute ( """
-feed de atualização
-onde id =?
-""" , (id_feed,))
-print ( ' dados atualizados ' )
-
-# delete feed
-cursor.execute ( """
-excluir do feed
-onde id =?
-""" , (id_feed,))
-
-select * from [TB_feed]
-delet from [TB_feed] where id = ?
-update [TB_feed] set (id_feed) values(?) where id = ?
-
-
-# criando tabela visibiliade
-cursor.execute ( """
-criar tabela de visibilidade (
-    publica varchar (100) não nulo,
-    id int null,
-    privado varchar (100) não é nulo
-    );
-""" )
-print ( ' tabela criada ' )
-
-# inserção visual
-cursor.execute ( """
-inserir na visibilidade (publica, id, privada)
-valores ('visivel', 20, 'privado')
-""" )
-
-cursor.execute ( """
-selecione * da visibilidade
-""" )
-
-para linha em cursor.fetchall ():
-    imprimir (linha)
-
-
-id_visibilidade =  30
-
-# update visibiliade
-cursor.execute ( """
-atualizar a visibilidade
-onde id =?
-""" , (id_visibilidade,))
-print ( ' dados atualizados ' )
-
-# delete visibiliade
-cursor.execute ( """
-excluir da visibilidade
-onde id =?
-""" , (id_visibilidade,))
-conn.commit ()
-conn.close ()
-
-select * from [TB_visibilidade]
-delet from [TB_visibilidade] where id = ?
-update [TB_visibilidade] set (id_visibilidade) values(?) where id = ?
-
-'''
-CRIANDO O MENU
-'''
-opecoes = int(input("Menu:\n "
-              "1- Criar rede social\n"
-              "2- Inserir usuário\n"
-              "3- Adicionar amigo\n"
-              "4- Enviar mensagem\n")
+def menu():
+    while True:
         try:
+            opcao = int(input(
+                "1) Inserir usuário\n" \
+                "2) Inserir postagem\n" \
+                "0) Sair\n\n" \
+                "->"
+            ))
+        except:
+            print("Opção inválida.")
+            continue
 
-            if opecoes == 1:
-               criarRedeSocial()
-            elif opecoes == 2:
-                inserirUsuario()
-            elif opecoes == 3:
-                adicionarAmigo()
-            elif opecoes == 4:
-                enviarMensagem()
-                break
+        if(opcao == 0):
+            break
+        elif(opcao == 1):
+            nome = input("Nome: ")
+            email = input("E-mail: ")
+            senha = input("Senha: ")
+            sexo = input("Sexo: ")
+            cidade = input("Cidade: ")
+            data_nascimento = input("Data de nascimento: ")
 
-        except ValueError:
-            print("Apenas números são válidos... Tente novamente!")
+            usuario = Usuario(nome, email, senha, sexo, cidade, data_nascimento)
+            usuario.insert()
+            print("Usuário cadastrado.")
+        elif(opcao == 2):
+            try:
+                id = int(input("ID do dono da postagem: "))
+            except:
+                print("Valor inválido.")
+                continue
+            texto = input("Texto: ")
+            postagem = Postagem(id, texto)
+            postagem.insert()
+            print("Postagem inserida.")
 
+def main():
+    criarBanco()
+    menu()
 
 if __name__ == '__main__':
     main()
