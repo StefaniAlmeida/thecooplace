@@ -1,7 +1,7 @@
-from database.Config import config
 import mysql.connector
+from database.Config import config
+from database.UsuarioDAO import UsuarioDAO
 from Model.Usuario import Usuario
-from Model.Postagem import Postagem
 
 def criarBanco():
     conn = mysql.connector.connect(**config)
@@ -40,6 +40,15 @@ def criarBanco():
                 foreign key(usuario_id) references tb_usuario(id)
             );
         """)
+
+        cursor.execute("""
+            CREATE TABLE tb_amigo(
+                usuario1_id int not null,
+                usuario2_id int not null,
+                foreign key(usuario1_id) references tb_usuario(id),
+                foreign key(usuario2_id) references tb_usuario(id)
+            );
+        """)
     except mysql.connector.ProgrammingError:
         return
 
@@ -47,8 +56,8 @@ def menu():
     while True:
         try:
             opcao = int(input(
-                "1) Inserir usuário\n" \
-                "2) Inserir postagem\n" \
+                "1) Login\n" \
+                "2) Registro\n" \
                 "0) Sair\n\n" \
                 "->"
             ))
@@ -59,26 +68,48 @@ def menu():
         if(opcao == 0):
             break
         elif(opcao == 1):
-            nome = input("Nome: ")
             email = input("E-mail: ")
             senha = input("Senha: ")
-            sexo = input("Sexo: ")
-            cidade = input("Cidade: ")
-            data_nascimento = input("Data de nascimento: ")
 
-            usuario = Usuario(nome, email, senha, sexo, cidade, data_nascimento)
-            usuario.insert()
-            print("Usuário cadastrado.")
+            usuario = UsuarioDAO().verificarLogin(email, senha)
+
+            if(usuario is None):
+                print("Credenciais incorretos.\n")
+                continue
+            else:
+                menuDeUsuario(usuario)
         elif(opcao == 2):
             try:
-                id = int(input("ID do dono da postagem: "))
+                nome = input("Nome: ")
+                email = input("E-mail: ")
+                senha = input("Senha: ")
+                sexo = input("Sexo: ")
+                cidade = input("Cidade: ")
+                data_nascimento = input("Data de nascimento (dd/mm/YYYY): ")
+
+                usuario = Usuario(nome, email, senha, sexo, cidade, data_nascimento)
+                UsuarioDAO().insert(usuario)
+
+                menuDeUsuario(usuario)
             except:
-                print("Valor inválido.")
+                print("Erro!")
                 continue
-            texto = input("Texto: ")
-            postagem = Postagem(id, texto)
-            postagem.insert()
-            print("Postagem inserida.")
+
+def menuDeUsuario(usuario: Usuario):
+    while True:
+        try:
+            opcao = int(input(
+                "1) Ver perfil\n" \
+                "2) -\n" \
+                "0) Sair\n\n" \
+                "->"
+            ))
+        except:
+            print("Opção inválida.")
+            continue
+
+        if(opcao == 0):
+            break
 
 def main():
     criarBanco()
