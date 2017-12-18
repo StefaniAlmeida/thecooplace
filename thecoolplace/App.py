@@ -1,7 +1,10 @@
 import mysql.connector
 from database.Config import config
 from database.UsuarioDAO import UsuarioDAO
+from database.MensagemDAO import MensagemDAO
 from Model.Usuario import Usuario
+from Model.Mensagem import Mensagem
+from datetime import date
 
 def criarBanco():
     conn = mysql.connector.connect(**config)
@@ -99,8 +102,11 @@ def menuDeUsuario(usuario: Usuario):
     while True:
         try:
             opcao = int(input(
-                "1) Ver perfil\n" \
-                "2) -\n" \
+                "\n1) Ver perfil\n" \
+                "2) Add Amigo\n" \
+                "3) Mandar mensagem\n" \
+                "4) Ver amigos\n" \
+                "5) Ver mensagens\n" \
                 "0) Sair\n\n" \
                 "->"
             ))
@@ -110,6 +116,93 @@ def menuDeUsuario(usuario: Usuario):
 
         if(opcao == 0):
             break
+        elif(opcao == 1):
+            print("\nNome: %s" \
+                  "\nE-mail: %s" \
+                  "\nSexo: %s" \
+                  "\nCidade: %s" \
+                  "\nData de nascimento: %s" % (usuario.nome, usuario.email, usuario.sexo, usuario.cidade, usuario.data_nascimento))
+        elif(opcao == 2):
+            nome = input("Nome: ")
+
+            usuarios = UsuarioDAO().procurarPeloNome(nome)
+
+            if(len(usuarios) == 0):
+                print("Nenhum usuário com este nome encontrado.")
+                continue
+            elif(len(usuarios) == 1):
+                try:
+                    UsuarioDAO().addAmigo(usuario.id, usuarios[0].id)
+                    print("Amigo adicionado.")
+                except Exception as err:
+                    print(err)
+            else:
+                print()
+                i = 1
+                for u in usuarios:
+                    print("%s) %s - %s" % (i, u.nome, u.email))
+                    i += 1
+
+                n = input("Digite o número do usuário: ")
+
+                u = UsuarioDAO().procurarPeloId(usuarios[u - 1].id)
+
+                if(u is None):
+                    print("Usuário inválido.")
+                else:
+                    UsuarioDAO().addAmigo(usuario.id, u.id)
+                    print("%s foi adicionado aos seus amigos." % (u.nome))
+        elif(opcao == 3):
+            nome = input("Nome: ")
+
+            usuarios = UsuarioDAO().procurarPeloNome(nome)
+
+            if (len(usuarios) == 0):
+                print("Nenhum usuário com este nome encontrado.")
+                continue
+            elif (len(usuarios) == 1):
+                try:
+                    texto = input("Mensagem: ")
+                    mensagem = Mensagem(usuario, usuarios[0], texto, str(date.today()))
+
+                    MensagemDAO().insert(mensagem)
+                    print("Mensagem enviada.")
+                except Exception as err:
+                    print(err)
+            else:
+                print()
+                i = 1
+                for u in usuarios:
+                    print("%s) %s - %s" % (i, u.nome, u.email))
+                    i += 1
+
+                n = input("Digite o número do usuário: ")
+
+                u = UsuarioDAO().procurarPeloId(usuarios[u - 1].id)
+
+                if (u is None):
+                    print("Usuário inválido.")
+                else:
+                    try:
+                        texto = input("Mensagem: ")
+                        mensagem = Mensagem(usuario, usuarios[0], texto, str(date.today()))
+
+                        MensagemDAO().insert(mensagem)
+                        print("Mensagem enviada.")
+                    except Exception as err:
+                        print(err)
+
+        elif(opcao == 4):
+            amigos = UsuarioDAO().listarAmigos(usuario.id)
+
+            i = 1
+            for amigo in amigos:
+                print("%s) %s" % (i, amigo.nome))
+        elif(opcao == 5):
+            mensagens = MensagemDAO().listarDeUsuario(usuario.id)
+
+            for mensagem in mensagens:
+                print("(%s) %s -> %s: %s" % (mensagem.data_envio, mensagem.remetente.nome, mensagem.destinatario.nome, mensagem.texto))
 
 def main():
     criarBanco()
