@@ -81,8 +81,8 @@ def menu():
                 continue
             else:
                 menuDeUsuario(usuario)
+         #USAMOS O CASO DE TESTE UNITARIO (ASSERT)
         elif(opcao == 2):
-            try:
                 nome = input("Nome: ")
                 email = input("E-mail: ")
                 senha = input("Senha: ")
@@ -94,9 +94,12 @@ def menu():
                 UsuarioDAO().insert(usuario)
 
                 menuDeUsuario(usuario)
-            except:
-                print("Erro!")
-                continue
+        assert len(nome) < 70, "Nome deve ter no máximo 70 caracteres"
+        assert len(email) < 20, "E-mail deve ter no máximo 20 caracteres"
+        assert len(senha) < 3, "Senha deve ter no minimo 3 caracteres"
+        assert sexo == "Feminino" or sexo == "Masculino", "Insira um gênero válido"
+        assert len(cidade) < 30, "Cidade deve ter no máximo 30 caracteres“
+        assert len(data_nascimento) < 10, "Data de nascimento deve ter no máximo 10 caracteres"
 
 def menuDeUsuario(usuario: Usuario):
     while True:
